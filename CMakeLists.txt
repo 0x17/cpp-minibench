@@ -5,8 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 
 include(FetchContent)
 set(BENCHMARK_DOWNLOAD_DEPENDENCIES ON)
-#set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
-#set(BENCHMARK_USE_BUNDLED_GTEST OFF CACHE BOOL "")
+set(BENCHMARK_ENABLE_TESTING OFF CACHE BOOL "")
+set(BENCHMARK_USE_BUNDLED_GTEST OFF CACHE BOOL "")
 FetchContent_Declare(
 		benchmark
 		GIT_REPOSITORY https://github.com/CodSpeedHQ/codspeed-cpp # Target the codspeed cpp repository
