@@ -31,6 +31,9 @@ const auto s {"blabunga"s };
 
 std::array<std::string, 1024> strs;
 
+static std::random_device rd;
+static std::mt19937 gen(rd());
+
 std::string RandomStr()
 {
     const auto chars =
@@ -39,8 +42,6 @@ std::string RandomStr()
         "abcdefghijklmnopqrstuvwxyz"s;
     std::string result;
     result.reserve(256);
-    static std::random_device rd;
-    static std::mt19937 gen(rd());
     std::uniform_int_distribution distrib(0, static_cast<int>(chars.size() - 1));
     for (int i = 0; i < 256; ++i) {
         result += chars[distrib(gen)];
@@ -50,6 +51,7 @@ std::string RandomStr()
 
 void initstrs()
 {
+    gen.seed(23);
     for(int i{}; i<strs.size(); i++)
         strs[i] = RandomStr();
 }
