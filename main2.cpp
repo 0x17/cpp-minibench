@@ -1,7 +1,7 @@
-#include <iostream>
 #include <benchmark/benchmark.h>
 #include <random>
 #include <array>
+#include <chrono>
 #include <numeric>
 
 using namespace std::literals::string_literals;
@@ -56,30 +56,37 @@ static void initstrs()
         strs[i] = RandomStr();
 }
 
-static void Bench1(benchmark::State& state) {
-    initstrs();
-    for (auto _ : state) {
-        int cnt = std::accumulate(
+
+int main(int argc, char **argv)
+{
+    auto start = std::chrono::high_resolution_clock::now();
+    int cnt;
+    for (int i{}; i<10; i++)
+    {
+        initstrs();
+        cnt = std::accumulate(
         strs.begin(), strs.end(), 0,
         [](const int sum, const std::string& s2) {
             return sum + SameText1(s, s2);
         });
-        benchmark::DoNotOptimize(cnt);
+        std::cout << cnt << ' ';
     }
-}
-BENCHMARK(Bench1);
-
-static void Bench2(benchmark::State& state) {
-    initstrs();
-    for (auto _ : state) {
-        int cnt = std::accumulate(
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Elapsed time: " << duration << " ns" << std::endl;
+    start = std::chrono::high_resolution_clock::now();
+    for (int i{}; i<10; i++)
+    {
+        initstrs();
+        cnt = std::accumulate(
         strs.begin(), strs.end(), 0,
         [](const int sum, const std::string& s2) {
             return sum + SameText2(s, s2);
         });
-        benchmark::DoNotOptimize(cnt);
+        std::cout << cnt << ' ';
     }
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+    std::cout << "Elapsed time: " << duration << " ns" << std::endl;
+    return 0;
 }
-BENCHMARK(Bench2);
-
-BENCHMARK_MAIN();

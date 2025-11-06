@@ -16,5 +16,5 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(benchmark)
 
-add_executable(cpp-minibench main.cpp)
+add_executable(cpp-minibench main.cpp) # main2.cpp)
 target_link_libraries(cpp-minibench PRIVATE benchmark::benchmark)
