@@ -2,6 +2,7 @@
 #include <benchmark/benchmark.h>
 #include <random>
 #include <array>
+#include <numeric>
 
 using namespace std::literals::string_literals;
 
@@ -26,13 +27,13 @@ static bool SameText2( const std::string_view S1, const std::string_view S2 )
     return true;
 }
 
-const std::string s {"blabunga"s };
+const auto s {"blabunga"s };
 
 std::array<std::string, 1024> strs;
 
 std::string RandomStr()
 {
-    const std::string chars =
+    const auto chars =
         "0123456789"
         "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         "abcdefghijklmnopqrstuvwxyz"s;
@@ -40,7 +41,7 @@ std::string RandomStr()
     result.reserve(256);
     static std::random_device rd;
     static std::mt19937 gen(rd());
-    std::uniform_int_distribution<> distrib(0, static_cast<int>(chars.size() - 1));
+    std::uniform_int_distribution distrib(0, static_cast<int>(chars.size() - 1));
     for (int i = 0; i < 256; ++i) {
         result += chars[distrib(gen)];
     }
@@ -56,21 +57,24 @@ void initstrs()
 static void Bench1(benchmark::State& state) {
     initstrs();
     for (auto _ : state) {
-        int cnt {};
-        for(const auto &s2 : strs)
-            cnt += SameText1(s, s2);
+        int cnt = std::accumulate(
+        strs.begin(), strs.end(), 0,
+        [](const int sum, const std::string& s2) {
+            return sum + SameText1(s, s2);
+        });
         benchmark::DoNotOptimize(cnt);
     }
 }
-// Register the function as a benchmark
 BENCHMARK(Bench1);
 
 static void Bench2(benchmark::State& state) {
     initstrs();
     for (auto _ : state) {
-        int cnt {};
-        for(const auto &s2 : strs)
-            cnt += SameText2(s, s2);
+        int cnt = std::accumulate(
+        strs.begin(), strs.end(), 0,
+        [](const int sum, const std::string& s2) {
+            return sum + SameText2(s, s2);
+        });
         benchmark::DoNotOptimize(cnt);
     }
 }
