@@ -1,0 +1,29 @@
+name: CodSpeed Benchmarks
+
+on:
+  push:
+    branches:
+      - "main" # or "master"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmarks:
+    name: Run benchmarks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Build binary
+        run: |
+          mkdir build
+          cd build
+          cmake -DCODSPEED_MODE=instrumentation ..
+          make -j
+      - name: Run the benchmarks
+        uses: CodSpeedHQ/action@v4
+        with:
+          mode: instrumentation
+          run: ./build/cpp-minibench
+          token: ${{ secrets.CODSPEED_TOKEN }}
