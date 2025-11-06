@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(SameTextBench)
+project(cpp-minibench)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -13,5 +13,5 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(benchmark)
 
-add_executable(SameTextBench main.cpp)
-target_link_libraries(SameTextBench PRIVATE benchmark::benchmark)
+add_executable(cpp-minibench main.cpp)
+target_link_libraries(cpp-minibench PRIVATE benchmark::benchmark)
