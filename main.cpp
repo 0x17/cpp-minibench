@@ -15,7 +15,7 @@ static bool SameTextStdEqual(const std::string_view a,
     return std::equal(a.begin(), a.end(), b.begin(),
                       [](const unsigned char c1, const unsigned char c2)
                       {
-                          return c1 == c2 || std::toupper(c1) == std::toupper(c2);
+                          return c1 == c2 || std::tolower(c1) == std::tolower(c2);
                       });
 }
 
@@ -24,7 +24,7 @@ static bool SameTextForLoop(const std::string_view S1, const std::string_view S2
     if (S1.length() != S2.length()) return false;
     for (size_t i{}; i < S1.length(); i++)
     {
-        if (S1[i] != S2[i] && tolower(S1[i]) != tolower(S2[i]))
+        if (S1[i] != S2[i] && std::tolower(S1[i]) != std::tolower(S2[i]))
             return false;
     }
     return true;
