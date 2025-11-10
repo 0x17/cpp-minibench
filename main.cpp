@@ -24,6 +24,17 @@ static bool SameTextStdEqual(const std::string_view a,
                       });
 }
 
+static bool SameTextStdEqual2(const std::string_view a,
+                             const std::string_view b)
+{
+    if (b.length() != a.length()) return false;
+    return std::equal(a.begin(), a.end(), b.begin(),
+                      [](const unsigned char c1, const unsigned char c2)
+                      {
+                          return c1 == c2 || std::toupper(c1) == std::toupper(c2);
+                      });
+}
+
 static bool SameTextForLoop(const std::string_view S1, const std::string_view S2)
 {
     if (S1.length() != S2.length()) return false;
@@ -51,6 +62,23 @@ static void BenchStdEqual(benchmark::State& state)
 }
 
 BENCHMARK(BenchStdEqual);
+
+static void BenchStdEqual2(benchmark::State& state)
+{
+    InitStrings();
+    for (auto _ : state)
+    {
+        int cnt = std::accumulate(
+            strs.begin(), strs.end(), 0,
+            [](const int sum, const std::string& s2)
+            {
+                return sum + SameTextStdEqual2(s, s2);
+            });
+        benchmark::DoNotOptimize(cnt);
+    }
+}
+
+BENCHMARK(BenchStdEqual2);
 
 static void BenchForLoop(benchmark::State& state)
 {
